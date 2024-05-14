@@ -194,6 +194,41 @@ async def getTechLjqs(
     return format_response(stock_list, total,page,limit)
 
 
+@router.get('/tech/ljqd')
+async def getTechLjqd(
+    page: int = Query(default=1, ge=1),
+    limit: int = Query(default=10, ge=1, le=100),
+    field: str = None,
+    order: str =None,
+    code: str = None,
+    name: str = None
+):
+    """
+    获取量价齐跌的股票技术数据。
+
+    
+    参数:
+    - page: 页码（默认 1，必须大于等于 1）
+    - limit: 每页项目数（默认 10，必须在 1 到 100 之间）
+    - field: 字段名称，用于排序。
+    - order: 排序顺序，可选值为 'ascend', 'descend'。
+    - code: 股票代码进行模糊搜索（可选）
+    - name: 股票名称进行模糊搜索（可选）
+
+    返回:
+    - 量价齐跌的股票技术数据和总条数
+    """
+    query = {}
+    if code:
+        query["code"] = {"$regex": re.compile(re.escape(code), re.IGNORECASE)}
+    if name:
+        query["name"] = {"$regex": re.compile(re.escape(name), re.IGNORECASE)}
+     
+    stock_list, total =await get_page_data("stock_tech_ljqd", query, page, limit, field, order)
+
+    return format_response(stock_list, total,page,limit)
+
+
 
 @router.get('/tech/lxsz')
 async def getTechLxsz(

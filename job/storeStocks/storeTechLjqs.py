@@ -10,9 +10,16 @@ sys.path.append(cpath)
 from lib.mongoDB import bulk_delete, bulk_insert
 
 #量价齐升
-def get_rank_xzjp_list():
+def get_rank_ljqs_list():
     try:
         stocks = ak.stock_rank_ljqs_ths().iloc[:, :10] 
+        return stocks.to_dict(orient="records")
+    except Exception as e:
+        print(f"Failed to retrieve stock information: {e}")
+        return None
+def get_rank_ljqd_list():
+    try:
+        stocks = ak.stock_rank_ljqd_ths().iloc[:, :10] 
         return stocks.to_dict(orient="records")
     except Exception as e:
         print(f"Failed to retrieve stock information: {e}")
@@ -26,6 +33,7 @@ def translate_to_english(individual_info):
         "最新价": "price",
         "阶段涨幅": "stageRate",
         "量价齐升天数": "nums",
+        "量价齐跌天数": "nums",
         "所属行业": "industry",
         "累计换手率": "turnoverRate",
     }
@@ -39,7 +47,21 @@ def translate_to_english(individual_info):
     return formatted_info
 
 def store_tech_ljqs_stocks():
-    stock_list = get_rank_xzjp_list()
+    stock_list = get_rank_ljqs_list()
+    if stock_list is not None:
+        translated_data_list = []
+        for item in stock_list:
+            translated_item = translate_to_english(item)
+            translated_data_list.append(translated_item)
+        
+        # Insert translated data into MongoDB
+        bulk_insert("stock_tech_ljqs", translated_data_list)
+        print("Translation and data storage successful!")
+    else:
+        print("Failed to retrieve stock information. Unable to translate and store.")
+
+def store_tech_ljqd_stocks():
+    stock_list = get_rank_ljqd_list()
     if stock_list is not None:
         translated_data_list = []
         for item in stock_list:
@@ -54,4 +76,6 @@ def store_tech_ljqs_stocks():
 
 if __name__ == '__main__':
     bulk_delete('stock_tech_ljqs')
+    bulk_delete('stock_tech_ljqd')
     store_tech_ljqs_stocks()
+    store_tech_ljqd_stocks()
