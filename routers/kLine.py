@@ -3,7 +3,8 @@
 from fastapi import APIRouter, HTTPException
 from datetime import datetime
 from lib.enums import PeriodEnum,AdjustEnum
-from stocks.get_stock_his import get_stock_his
+from routers.common import format_response
+from stocks.getStockHis import get_db_stock_his
 
 router = APIRouter()
 
@@ -28,7 +29,11 @@ async def get_stock_kLine(
     - start_time: 开始时间（YYYY-MM-DD）,默认从2023-01-01
     - end_time: 结束时间（YYYY-MM-DD）
 
-    Returns:
+    Returns:{
+        'code':0,
+        'message':'success',
+        "data": result
+    }
     - 股票数据列表
     """
     try:
@@ -49,14 +54,10 @@ async def get_stock_kLine(
         return {"data": cache[cache_key]}
 
     # 否则进行数据库查询
-    result=get_stock_his( code, period, adjust, start_time, end_time)
+    result=get_db_stock_his( code, period, adjust, start_time, end_time)
 
     # 将查询结果存入缓存
     cache[cache_key] = result
 
     # 返回查询结果
-    return {
-        'code':0,
-        'message':'success',
-        "data": result
-    }
+    return format_response(result)

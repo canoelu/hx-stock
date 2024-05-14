@@ -1,13 +1,12 @@
 import akshare as ak
 from datetime import datetime
-from pymongo import MongoClient
 import os.path
 import sys
 cpath_current = os.path.dirname(os.path.dirname(__file__))
 cpath = os.path.abspath(os.path.join(cpath_current, os.pardir))
 sys.path.append(cpath)
 # 获取 MongoDB 连接
-from  lib.mongoDB import STOCK_DB
+from lib.mongoDB import bulk_insert,check_exist_in_mongodb
 
 # 初始化变量
 end_date = datetime.now().strftime('%Y%m%d')
@@ -64,27 +63,16 @@ def translate_to_english(individual_info):
         formatted_info[english_key] = value
     return formatted_info
 
-
-
-# 检查是否文档中已经存在当前个股
-def check_exist_in_mongodb(collection_name, stock_code):
-    collection = STOCK_DB[collection_name]
-    existing_doc = collection.find_one({"code": stock_code})
-    return existing_doc is not None
-
-# 将数据插入到 MongoDB 中
-def insert_into_mongodb(collection_name, data):
-    collection = STOCK_DB[collection_name]
-    collection.insert_many(data)
-
-# 主逻辑
-def get_all_stock_base_info():
+  
+    # 主逻辑
+def store_all_stock_base_info():
     global cache
     stock_list = get_stock_list()
-    all_stock_info = []
+    inserted_count = 0  # 记录已插入的股票数量
     # 限制每次访问个股信息的数量为10
     for i in range(0, len(stock_list), 10):
         batch_stock_list = stock_list[i:i+10]
+        batch_stock_info = []
         for stock_code in batch_stock_list:
             # 检查文档是否已经存在当前个股
             if need_check_exist and check_exist_in_mongodb("stock_base", stock_code):
@@ -97,11 +85,14 @@ def get_all_stock_base_info():
                 individual_info = get_individual_info(stock_code)
                 # 转换为英文数据
                 individual_info = translate_to_english(individual_info)
-                # 更新缓存
                 cache[stock_code] = individual_info
-            all_stock_info.append(individual_info)
-    # 将获取到的所有股票信息插入到 MongoDB 中
-    insert_into_mongodb("stock_base", all_stock_info)
+            batch_stock_info.append(individual_info)
+            inserted_count += 1
+            if inserted_count >= 100:
+                # 达到每次插入 100 条的限制，将当前批次的股票信息插入到 MongoDB 中
+                bulk_insert("stock_base", batch_stock_info)
+                inserted_count = 0  # 重置已插入数量
+                batch_stock_info = []  # 清空当前批次的股票信息列表
 
 if __name__ == '__main__':
-    get_all_stock_base_info()
+    store_all_stock_base_info()

@@ -4,11 +4,11 @@ from datetime import datetime
 from lib.mongoDB import STOCK_DB
 from lib.enums import PeriodEnum,AdjustEnum
 
-def get_stock_his(
+def get_db_stock_his(
     code: str, 
     period: PeriodEnum = PeriodEnum.daily, 
     adjust: AdjustEnum = AdjustEnum.NOT_ADJUST, 
-    start_time: str = '20230101', 
+    start_time: str = '2023-01-01', 
     end_time: str = ''
 ):
     """
@@ -18,13 +18,12 @@ def get_stock_his(
     - code: 股票代码
     - period: 数据周期（daily, weekly, monthly）默认daily
     - adjust: 调整方式（'', qfq, hfq）默认''
-    - start_time: 开始时间（YYYY-MM-DD）,默认从20230101
+    - start_time: 开始时间（YYYY-MM-DD）,默认从2023-01-01
     - end_time: 结束时间（YYYY-MM-DD）
 
     Returns:
     - 股票数据列表
     """
-    print('code', code)
     collection_name = f"stk_{code}"
     collection = STOCK_DB[collection_name]
 

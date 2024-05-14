@@ -10,12 +10,12 @@ cpath_current = os.path.dirname(os.path.dirname(__file__))
 cpath = os.path.abspath(os.path.join(cpath_current, os.pardir))
 sys.path.append(cpath)
 from lib.mongoDB import STOCK_DB, bulk_insert
-from getStockList import get_stock_list
 from lib.enums import PeriodEnum, AdjustEnum
+from stocks.getStockList import get_db_stock_list
+
 
 # 获取不同股票代码的最新日期
 def get_latest_date_from_db(code):
-    
     collection_name = f"stk_{code}"
     collection = STOCK_DB[collection_name]
     latest_doc = collection.find_one(sort=[("date", -1)])
@@ -80,12 +80,12 @@ def fetch_and_insert_stock_data(stock_pool):
         merged_data = pd.concat(data_list)
         bulk_insert(collection_name, merged_data.to_dict(orient='records'))
 # 获取历史数据
-def get_his_data():
-    stock_pool = get_stock_list()
+def store_his_data():
+    stock_pool = get_db_stock_list()
     stock_pool = [item['code'] for item in stock_pool]
     for i in range(0, len(stock_pool), batch_size):
         batch_stocks = stock_pool[i:i+batch_size]
         fetch_and_insert_stock_data(batch_stocks)
 
 if __name__ == '__main__':
-    get_his_data()
+    store_his_data()
