@@ -86,10 +86,10 @@ class StrategyRunner:
         perf_stats = pd.concat([perf_stats_year, perf_stats_all.T], axis=0)
         perf_stats_ = round(perf_stats,4).reset_index()
         fig, (ax0, ax1) = plt.subplots(2,1, gridspec_kw = {'height_ratios':[1.5, 4]}, figsize=(20,8))
-        cols_names = ['日期', '年度\n收益率', '累计\n收益率', '年度\n波动率',
-            '夏普\n比率', '卡尔马\n比率', '稳定性', '最大\n回撤',
-            '欧米伽\n比率', '索提诺\n比率', '偏度', '峰度', '尾部\n比率',
-            '每日风险\n价值']
+        cols_names = ['date', 'year\nshouyilv', 'total\nshouyilv', 'year\nbodonglv',
+            'xiapu\nrate', 'kaerma\nrate', 'wendingxing', 'max\nhuice',
+            'oumiga\nrate', 'suotinuo\nrate', 'piandu', 'fengdu', 'weibu\nrate',
+            'meirifengxian\njiazhi']
         # 绘制表格
         ax0.set_axis_off() # 除去坐标轴
         table = ax0.table(cellText = perf_stats_.values, 

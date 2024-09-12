@@ -20,8 +20,8 @@ boll_runner = StrategyRunner(BollStrategy, stock_code, start_date, end_date, siz
 boll_runner.backtest()
 
 # 运行海龟策略
-# turble_runner = StrategyRunner(TurtleStrategy, stock_code, start_date, end_date)
-# turble_runner.backtest()
+turble_runner = StrategyRunner(TurtleStrategy, stock_code, start_date, end_date)
+turble_runner.backtest()
 # RSI
 # rsiStrategy = StrategyRunner(RSIStrategy, stock_code, start_date, end_date)
 # rsiStrategy.backtest()

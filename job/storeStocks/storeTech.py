@@ -17,6 +17,8 @@ from job.storeStocks.storeTechXstp import store_tech_xstp_stocks
 
 
 def storeStockTech():
+    # 获取股票列表
+    store_all_stock_base_info()
     # 获取持续缩量、获取持续放量
     store_tech_cxsl_stocks()
     store_tech_cxfl_stocks()
@@ -33,8 +35,7 @@ def storeStockTech():
     store_tech_xzjp_stocks()
     # 向上突破
     store_tech_xstp_stocks()
-    # 获取股票列表
-    # store_all_stock_base_info()
+   
     
 
 if __name__ == '__main__':

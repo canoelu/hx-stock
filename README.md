@@ -16,7 +16,9 @@
 （2）在终端输入命令行conda install -c conda-forge ta-lib 。
 （3）此处确认是否继续安装？输入y 继续安装，直到完成
 （4）安装完成。
+    conda create -n sequoia39 python=3.9
     conda activate sequoia39  
+    conda install -c conda-forge ta-lib 
 ```
 
 a.安装依赖库：
@@ -35,3 +37,4 @@ pip install -r requirements.txt --upgrade
 ```
 uvicorn main:app --reload
 ```
+

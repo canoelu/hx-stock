@@ -9,7 +9,7 @@ cpath = os.path.abspath(os.path.join(cpath_current, os.pardir))
 sys.path.append(cpath)
 from job.storeStocks.storeAllStockBaseInfo import store_all_stock_base_info
 from job.storeStocks.storeTechCxsl import store_tech_cxsl_stocks,store_tech_cxfl_stocks
-from job.storeStocks.storeTechLjqs import store_tech_xzjp_stocks
+from job.storeStocks.storeTechLjqs import store_tech_ljqd_stocks
 from job.storeStocks.storeTechcxd import store_tech_cxdg_stocks
 
 def job():
@@ -19,7 +19,7 @@ def job():
     store_tech_cxsl_stocks()
     store_tech_cxfl_stocks()
     # 获取量价齐升
-    store_tech_xzjp_stocks()
+    store_tech_ljqd_stocks()
     # store_tech_cxdg_stocks
     store_tech_cxdg_stocks()
     

@@ -42,7 +42,7 @@ def get_historical_data(code, period: PeriodEnum, adjust: AdjustEnum, start_date
             data = data.query('volume !=0')
             data['period'] = period_value
             data['adjust'] = adjust_value
-            data['code'] = code  # 添加股票代码字段
+            # data['code'] = code  # 添加股票代码字段
             print(f"获取{code}时间：{start_date}-{end_date}周期：{period_value}复权方式：{adjust_value} 数据成功")
             return data
         else:

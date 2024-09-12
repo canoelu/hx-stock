@@ -3,8 +3,10 @@
 # -*- coding: utf-8 -*-
 from pymongo import MongoClient
 
+# client = MongoClient('mongodb://admin:admin@8.137.99.29:27017/')
 client = MongoClient('localhost', 27017)
 STOCK_DB = client.stock
+
 
 def bulk_delete(collection_name):
     collection = STOCK_DB[collection_name]
